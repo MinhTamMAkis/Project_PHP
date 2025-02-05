@@ -8,9 +8,9 @@ require_once('./includes/database.php');
 // require_once('./includes/phpmailer/PHPMailer.php');
 // require_once('./includes/phpmailer/SMTP.php');
 //
-// require_once('./includes/function.php');
-// require_once('./includes/database.php');
-// require_once('./includes/session.php');
+require_once('./includes/function/function.php');
+require_once('./includes/function/query.php');
+require_once('./includes/function/session.php');
 
 
 //setFlashData('msg','xinchao');
@@ -40,7 +40,7 @@ $path = 'modules/'. $module. '/' . $action. '.php';
 if(file_exists($path)){
     require_once($path);
 }else{
-    require_once 'modules/error/404.php';
+    // require_once 'modules/error/404.php';
 
 }
 
