@@ -167,7 +167,7 @@ function isLogin(){
     if(getSession('logintoken')){
         $tokenLogin = getSession('logintoken');
         //Kiểm tra token có giống trong database hay không 
-        $queryToken = oneRaw("SELECT id FROM users WHERE remember_token ='$tokenLogin'");
+        $queryToken = oneRaw("SELECT user_Id FROM logintoken WHERE token ='$tokenLogin'");
         if(!empty($queryToken)){
             $checkLogin = true;
         }else{

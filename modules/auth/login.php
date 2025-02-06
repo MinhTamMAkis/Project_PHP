@@ -10,7 +10,7 @@ $title = [
 
 // Kiểm tra trạng thái đăng nhập
 if(isLogin()){
-    redirect('?module=dashboard&action=index');
+    redirect('?module=dashboard&action=home');
 }
 
 if(isPost()){
@@ -19,11 +19,10 @@ if(isPost()){
     if(!empty(trim($filterAll['email'])) && !empty(trim($filterAll['password']))){
         // Kiểm tra đăng nhập
         $email = $filterAll['email'];
-        $password = $filterAll['password'];
-
+        $password = $filterAll['password']; 
+    
         // Truy vấn thông tin user theo mail
         $QueryUser = oneRaw("SELECT password ,id FROM users WHERE email = '$email'");
-
         if(!empty($QueryUser)){
             $passwordHash = $QueryUser['password'];
             $userId= $QueryUser['id'];
@@ -40,14 +39,16 @@ if(isPost()){
                 ];
 
                 $insertStatus = insert('logintoken',$dataInsertToken);
+                var_dump($insertStatus);
 
                 if($insertStatus){
                     //Insert thành công
 
-                    //LLưu cái tokenLogin vào trong sesssion 
+                    //Lưu cái tokenLogin vào trong sesssion 
                     setSession('logintoken',$tokenLogin);
-                    redirect('?module=dashboard&action=dashboard');
-
+                    redirect('?module=dashboard&action=home');
+                    
+                    
                 }else{
                     setFlashData('smg','Can not login,please try a again');
                     setFlashData('smg_type','danger');
@@ -89,8 +90,8 @@ $smg_type = getFlashData('smg_type');
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" placeholder="Please enter your password">
-            </div>
+                <input type="password" class="form-control" name="password" placeholder="Please enter your password" autocomplete="off">
+                </div>
             <button type="submit" class="btn btn-primary btn-block">Login</button>
             <p class="text-center"><a href="?module=auth&action=forgot">Forgot Password</a></p>
             <p class="text-center"><a href="?module=auth&action=register">Register</a></p>
