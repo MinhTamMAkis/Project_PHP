@@ -1,0 +1,13 @@
+.table_list{
+    width: 100%;
+
+}
+.table_list table{
+    width: 100%;
+    border: solid 2px black;
+    border-spacing: 0px
+}
+.table_list table tr,td,th{
+    border: solid 2px black;
+
+}

@@ -7,7 +7,7 @@ const _ACTION = 'home';
 const _CODE = true;
 
 // thiết lập host
-define('_WEB_HOST','http://'.$_SERVER['HTTP_HOST'].'/Project_PHP');
+define('_WEB_HOST','http://'.$_SERVER['HTTP_HOST'].'/Project_PHP/Project_PHP');
 // define('_WEB_HOST', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/Project_PHP');
 
 define('_WEB_HOST_TEMPLATES', _WEB_HOST.'/views');
