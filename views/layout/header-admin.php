@@ -125,7 +125,7 @@ if(!defined('_CODE')){
                             <i class="fixe"></i>
                             <span><a href="?module=user&action=list_user">User List</a></span>
                         </a>
-                        <a href="#"> 
+                        <a href="?module=manga&action=list_manga"> 
                             <i class="fixe"></i>
                             <span>Dashboard Dark</span>
                         </a>

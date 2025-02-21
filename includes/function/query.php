@@ -1,4 +1,3 @@
-<!-- Các hàm xử lý liến quan SQL -->
 <?php
 if(!defined('_CODE')){
     die('Access denied...');

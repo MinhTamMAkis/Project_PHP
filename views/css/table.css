@@ -1,13 +1,105 @@
 .table_list{
     width: 100%;
-
+    padding: 10px;
+    position: relative;
 }
 .table_list table{
     width: 100%;
     border: solid 2px black;
-    border-spacing: 0px
+    border-spacing: 0px;
+    margin-top: 50px;
 }
 .table_list table tr,td,th{
     border: solid 2px black;
 
 }
+.option_table {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.8rem;
+    justify-content: end;
+}
+/* <!-- CSS cho dropdown --> */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown p {
+    position: absolute;
+    font-size: 0.7rem;
+    bottom: -50%;
+  
+}
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    padding: 10px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content label {
+    display: block;
+}
+
+
+.option_for_table {
+    display: flex;
+    margin-top: 30px;
+}
+/* input */
+/* use it in dark theme */
+.inputBox {
+    position: relative;
+  }
+  
+  .inputBox input {
+    padding: 15px 20px;
+    outline: none;
+    background: transparent;
+    border-radius: 5px;
+    color: #fff;
+    border: 1px solid#ee8456;
+    font-size: 1em;
+  }
+  
+  .inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 15px 20px;
+    pointer-events: none;
+    font-size: 1em;
+    transition: 0.4s cubic-bezier(0.05, 0.81, 0, 0.93);
+    color: #ee8456;
+    letter-spacing: 0.1em;
+  }
+  
+  .inputBox input:focus ~ span,
+  .inputBox input:valid ~ span {
+    font-size: 0.7em;
+    transform: translateX(14px) translateY(-7.5px);
+    padding: 0 5px;
+    border-radius: 2px;
+    background: #212121;
+    letter-spacing: 0em;
+    border: 1px solid #ee8456;
+  }
+  
+  

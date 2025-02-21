@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('config.php');
+require_once('systemurl.php');
+
 require_once('./includes/database.php');
 
 //thư viên php mailer
