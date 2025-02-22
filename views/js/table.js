@@ -42,23 +42,34 @@ class TablePagination {
     }
 
     renderTable(data) {
-        const tableBody = document.querySelector(`${this.tableId} tbody`);
+        const table = document.querySelector(this.tableId);
+        const tableHead = table.querySelector('thead tr');
+        const tableBody = table.querySelector('tbody');
+    
         tableBody.innerHTML = ''; // Xóa dữ liệu cũ
-
+    
+        // Kiểm tra nếu chưa có cột Action trong thead thì thêm vào
+        if (!tableHead.querySelector('.a-column')) {
+            const actionHeader = document.createElement('th');
+            actionHeader.textContent = '     ';
+            actionHeader.classList.add('a-column');
+            tableHead.appendChild(actionHeader);
+        }
+    
         if (data.length === 0) {
             tableBody.innerHTML = '<tr><td colspan="5">No users found</td></tr>';
         } else {
             data.forEach(item => {
                 const row = document.createElement('tr');
                 row.dataset.item = JSON.stringify(item); // Lưu toàn bộ dữ liệu vào dataset (để dùng sau này)
-
+    
                 this.columns.forEach(col => {
                     const cell = document.createElement('td');
-
+    
                     if (col.key === 'image') {
                         const img = document.createElement('img');
                         img.src = item[col.key] ? `${_WEB_HOST}/uploads/${item[col.key]}` : 'default.jpg';
-                        img.width = 100; // Kích thước ảnh
+                        img.width = 100;
                         img.onerror = function () {
                             this.style.display = 'none';
                             const noImageText = document.createElement('span');
@@ -69,18 +80,23 @@ class TablePagination {
                     } else {
                         cell.textContent = item[col.key] || '--';
                     }
-
+    
                     if (col.columnClass) {
                         cell.classList.add(col.columnClass);
                     }
-
+                    if (col.checkboxId) {
+                        const checkbox = document.getElementById(col.checkboxId);
+                        if (checkbox && !checkbox.checked) {
+                            cell.style.display = 'none';
+                        }
+                    }
                     row.appendChild(cell);
                 });
-
-                // Thêm cột chứa nút Cập Nhật và Xóa
+    
+                // Thêm cột chứa nút Cập Nhật và Xóa vào mỗi hàng dữ liệu
                 const actionCell = document.createElement('td');
                 actionCell.classList.add('a-column');
-
+    
                 if (this.buttonupdate) {
                     const updateBtn = document.createElement('button');
                     updateBtn.textContent = 'Cập Nhật';
@@ -88,7 +104,7 @@ class TablePagination {
                     updateBtn.dataset.id = item.id;
                     actionCell.appendChild(updateBtn);
                 }
-
+    
                 if (this.buttondelete) {
                     const deleteBtn = document.createElement('button');
                     deleteBtn.textContent = 'Xóa';
@@ -96,12 +112,13 @@ class TablePagination {
                     deleteBtn.dataset.id = item.id;
                     actionCell.appendChild(deleteBtn);
                 }
-
+    
                 row.appendChild(actionCell);
                 tableBody.appendChild(row);
             });
         }
     }
+    
 
     updatePagination() {
         const pageInfo = document.querySelector(`${this.paginationId} #pageInfo`);

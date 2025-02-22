@@ -29,18 +29,25 @@ if ($method === 'POST') {
         'tac_gia' => $_POST['tac_gia'] ?? ''
     ];
 
-    // Nếu có ảnh thì cập nhật ảnh
+    // Xử lý ảnh
     if (!empty($_FILES['image']['name'])) {
         $fileTmpPath = $_FILES['image']['tmp_name'];
-        $fileName = basename($_FILES['image']['name']);
-        $uploadFilePath = UPLOAD_DIR . $fileName;
+        $fileExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION); // Lấy phần mở rộng
+
+        // Tạo slug từ name
+        $nameSlug = !empty($_POST['nam_m']) ? slugify($_POST['nam_m']) : 'image';
+        
+        // Tạo tên file mới: slug-(random_number).ext
+        $newFileName = $nameSlug . '-' . rand(1000, 9999) . '.' . $fileExt;
+        $uploadFilePath = UPLOAD_DIR . $newFileName;
 
         if (move_uploaded_file($fileTmpPath, $uploadFilePath)) {
-            $data['image'] = $fileName;
+            $data['image'] = $newFileName; // Sửa thành 'image'
         } else {
             die(json_encode(['error' => 'Lỗi khi tải ảnh lên']));
         }
     }
+
 
     if ($id) {
         // Nếu có ID thì cập nhật
@@ -52,9 +59,10 @@ if ($method === 'POST') {
         if (empty($data['nam_m']) || empty($data['tac_gia'])) {
             die(json_encode(['error' => 'Thiếu thông tin bắt buộc']));
         }
-
+      
         $result = insert('mange_tb', $data);
-        echo json_encode(['success' => $result ? true : false]);
+        echo json_encode(['success' => $result ? true : false, 'message' => 'Thêm Manga thành công!']);
+
     }
     exit;
 }
@@ -82,6 +90,10 @@ if ($method === 'GET') {
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }
+
+
+
+
 if ($method === 'DELETE') {
     header('Content-Type: application/json'); // Đảm bảo phản hồi JSON
 

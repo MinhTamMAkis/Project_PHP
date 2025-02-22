@@ -67,6 +67,7 @@ if (!isLogin()) {
                 <th>Tên Manga</th>
                 <th>Tác Giả</th>
                 <th>Ảnh Bìa</th>
+                
                 <th  class="actions-column" style="display: none;" >Hành Động</th>
                 
             </tr>
@@ -85,6 +86,7 @@ if (!isLogin()) {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
     var _WEB_HOST = "<?php echo _WEB_HOST; ?>";
     var module = '<?php echo $module; ?>';
 
@@ -104,7 +106,14 @@ if (!isLogin()) {
         ]
     });
 }
+function showAlert(message) {
+    $("#alertBox").text(message).fadeIn();
 
+    // Ẩn thông báo sau 3 giây
+    setTimeout(() => {
+        $("#alertBox").fadeOut();
+    }, 3000);
+}
 // Gọi fetchMangas() khi trang tải xong
 document.addEventListener('DOMContentLoaded', fetchMangas);
 
@@ -134,8 +143,11 @@ document.addEventListener('DOMContentLoaded', fetchMangas);
             contentType: false,
             processData: false,
             success: function (response) {
+                console.log("Response từ server:", response); // Kiểm tra dữ liệu trả về
                 alert(response.message);
-                location.reload();
+                fetchMangas();
+                $("#addMangaForm").hide();
+
             }
         });
     });
