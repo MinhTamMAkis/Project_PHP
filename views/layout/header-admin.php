@@ -85,7 +85,7 @@ if(!defined('_CODE')){
                         </div>
                         <div class="user-information">
                             <div class="avata-user">
-                              <img src="img/avata.jpg" alt="">
+                              <img src="https://i0.wp.com/unatotovietnam.com/wp-content/uploads/2023/02/con-duong-hoa-anh-dao-nhat-ban-dep_102504656.jpeg?resize=1020%2C765&ssl=1" alt="">
                             </div>
                             <div class="information-data">
                                 <div class="name-user">
@@ -104,7 +104,7 @@ if(!defined('_CODE')){
             <div class="nav-slider" id="menu-slide">
             <div class="contai-slibar">
                 <div class="logo">
-                    <h1>CRM</h1>
+                    <h1>MAKI</h1>
                 </div>
                 <div class="menu-nav">
                 <div class="yourcompany">
@@ -121,13 +121,13 @@ if(!defined('_CODE')){
                         <div class="star"></div>
                         </button>
                         <div class="dropdown-content" id="dropdown-content-1">
-                        <a href="#"> 
+                        <a a href="?module=user&action=list_user"> 
                             <i class="fixe"></i>
-                            <span><a href="?module=user&action=list_user">User List</a></span>
+                            <span>User List</span>
                         </a>
                         <a href="?module=manga&action=list_manga"> 
                             <i class="fixe"></i>
-                            <span>Dashboard Dark</span>
+                            <span>Manga</span>
                         </a>
                         </div>
                         

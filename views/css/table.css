@@ -2,16 +2,16 @@
     width: 100%;
     padding: 10px;
     position: relative;
+    margin-top: 20px;
+
 }
 .table_list table{
     width: 100%;
-    border: solid 2px black;
+    border: solid 2px blueviolet;
     border-spacing: 0px;
-    margin-top: 50px;
 }
 .table_list table tr,td,th{
-    border: solid 2px black;
-
+    border: solid 2px blueviolet;
 }
 .option_table {
     display: flex;
@@ -20,11 +20,23 @@
     font-size: 0.8rem;
     justify-content: end;
 }
+.option_table button {
+    padding: 5px;
+    background-color: blueviolet;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.table_list button{
+    color: white;
+    padding: 5px;
+}
 /* <!-- CSS cho dropdown --> */
 
 .dropdown {
     position: relative;
     display: inline-block;
+    background-color: black;
 }
 .dropdown p {
     position: absolute;
@@ -41,21 +53,21 @@
     cursor: pointer;
 }
 
-.dropdown-content {
+.dropdown-content-table {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: black;
     min-width: 160px;
     z-index: 1;
     box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     padding: 10px;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown-content-table {
     display: block;
 }
 
-.dropdown-content label {
+.dropdown-content-table label {
     display: block;
 }
 
@@ -102,4 +114,131 @@
     border: 1px solid #ee8456;
   }
   
-  
+  .a-column button {
+    display: block;
+    width: 100%; /* Nếu muốn full chiều ngang */
+    margin-bottom: 15px; /* Khoảng cách giữa các nút */
+}
+.a-column .update-btn {
+    background-color: #8A2BE2; /* Màu tím */
+    color: white;
+    border: 2px solid #6A1BBE;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.a-column .update-btn:hover {
+    background-color: #6A1BBE; /* Tím đậm hơn */
+}
+.a-column .delete-btn {
+    background-color: #FF4444; /* Đỏ */
+    color: white;
+    border: 2px solid #CC0000;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.a-column .delete-btn:hover {
+    background-color: #CC0000; /* Đỏ đậm hơn */
+}
+
+
+
+
+
+/* 🌟 Background tối mờ khi hiển thị popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    z-index: 1000;
+    justify-content: center;
+    
+    align-items: center;
+}
+
+/* 🌟 Nội dung chính của popup */
+.popup-content {
+    background: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 🌟 Nút đóng popup */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 🌟 Nút cập nhật & xóa */
+button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#updateMangaBtn {
+    background: #4CAF50; /* Màu xanh */
+    color: white;
+}
+
+#deleteMangaBtn {
+    background: #f44336; /* Màu đỏ */
+    color: white;
+}
+
+/* 🌟 Input chỉnh sửa */
+input[type="text"], input[type="file"] {
+    width: 90%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 🌟 Ảnh bìa */
+#popupMangaImage {
+    margin-top: 10px;
+    border-radius: 5px;
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* .popup-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} */
+

@@ -69,7 +69,8 @@ class TablePagination {
                     if (col.key === 'image') {
                         const img = document.createElement('img');
                         img.src = item[col.key] ? `${_WEB_HOST}/uploads/${item[col.key]}` : 'default.jpg';
-                        img.width = 100;
+                        img.width = 150;
+                        img.style.verticalAlign = 'middle';
                         img.onerror = function () {
                             this.style.display = 'none';
                             const noImageText = document.createElement('span');
@@ -96,11 +97,11 @@ class TablePagination {
                 // Thêm cột chứa nút Cập Nhật và Xóa vào mỗi hàng dữ liệu
                 const actionCell = document.createElement('td');
                 actionCell.classList.add('a-column');
-    
+                actionCell.style.width = 0;
                 if (this.buttonupdate) {
                     const updateBtn = document.createElement('button');
-                    updateBtn.textContent = 'Cập Nhật';
-                    updateBtn.classList.add('update-btn');
+                    updateBtn.textContent = 'Xem';
+                    updateBtn.classList.add('view-btn');
                     updateBtn.dataset.id = item.id;
                     actionCell.appendChild(updateBtn);
                 }
@@ -112,9 +113,23 @@ class TablePagination {
                     deleteBtn.dataset.id = item.id;
                     actionCell.appendChild(deleteBtn);
                 }
+                // **Thêm nút từ callback `actionButtons` nếu có**
+                if (typeof this.actionButtons === 'function') {
+                    const extraButtons = this.actionButtons(item);
+                    extraButtons.forEach(btn => actionCell.appendChild(btn));
+                }
     
                 row.appendChild(actionCell);
                 tableBody.appendChild(row);
+            });
+    
+            // **Thêm sự kiện click vào tất cả nút .view-btn**
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const id = event.target.dataset.id;
+                    // console.log('ID của nút Xem:', id);
+                    // alert(`Bạn đã chọn ID: ${id}`);
+                });
             });
         }
     }
