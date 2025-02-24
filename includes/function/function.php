@@ -162,6 +162,15 @@ function old_data($filename,$old_data,$default = null){
 
 // hàm kiểm tra trạng thái đăng nhập
 
+function slugify($string) {
+    // Chuyển về chữ thường
+    $string = mb_strtolower($string, 'UTF-8');
+    // Thay khoảng trắng, ký tự đặc biệt bằng dấu '-'
+    $string = preg_replace('/[^a-z0-9]+/u', '-', $string);
+    // Xóa dấu '-' ở đầu và cuối
+    return trim($string, '-');
+}
+
 function isLogin(){
     $checkLogin = false;
     if(getSession('logintoken')){

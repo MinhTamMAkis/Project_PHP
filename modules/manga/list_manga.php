@@ -15,66 +15,57 @@ if (!isLogin()) {
 ?>
 
 <div class="table_list">
-    <div class="option_table" style="display: flex; justify-content: space-between;">
+    <div  class="page_title">
         <h4>Danh sách Manga</h4>
-        <div>
-        <form id="importForm" enctype="multipart/form-data">
-            <input type="file" id="csvFile" name="csvFile" accept=".csv">
-            <button type="submit">Import CSV</button>
-        </form>
-        <button id="exportBtn">Export CSV</button>
     </div>
-        <div class="dropdown">
-        <p>show more table </p>
-        <button class="dropbtn">Select Show</button>
-        <div class="dropdown-content">
-        <input type="checkbox" id="actionsColumn" > Action
-        <input type="checkbox" id="statusColumn" > Status
-        <input type="checkbox" id="dueDateColumn" > Due Date
-        </div>
-    </div>
-        <button id="showAddForm">+ Thêm Manga</button>
-    </div>
-
     <!-- Form Thêm Manga -->
-    <div id="addMangaForm" style="display: none;">
-        <h3>Thêm Manga Mới</h3>
-        <form id="addForm">
-            <input type="text" id="nam_m" name="nam_m" placeholder="Tên Manga" required>
-            <input type="text" id="tac_gia" name="tac_gia" placeholder="Tác Giả" required>
-            <input type="file" id="image" name="image" accept="image/*" required>
-            <button type="submit">Thêm Manga</button>
-            <button type="button" id="cancelAdd">Hủy</button>
-        </form>
-    </div>
+    
+    
+    <div class="option_table" style="display: flex;">
+        <button id="showAddForm" onclick="openAddMangaPopup()">+ Thêm Manga</button>
+        <div class="dropdown">
+            <button class="dropbtn">Select Show</button>
+            <div class="dropdown-content-table">
+                <div>
+                <input type="checkbox" id="actionsColumn"> Action
+                </div>
+                <div><input type="checkbox" id="statusColumn"> Status
+                </div>
+            </div>
+        </div>
+        <div id="filePopup" class="popup" style="display: none;">
+            <div class="popup-content " style="display: flex;">
+                <span class="close-btn" onclick="closePopupFile()">&times;</span>
+                <h3>Import/Export</h3>
+                <form id="importForm" enctype="multipart/form-data" style="display: flex;">
+                    <input type="file" id="csvFile" name="csvFile" accept=".csv">
+                    <button type="submit">Import </button>
+                </form>
+                <button id="exportBtn">Export </button>
 
-    <!-- Form Cập Nhật Manga -->
-    <div id="updateMangaForm" style="display: none;">
-        <h3>Cập Nhật Manga</h3>
-        <form id="updateForm">
-            <input type="hidden" id="update_id" name="id">
-            <input type="text" id="update_nam_m" name="nam_m" placeholder="Tên Manga" required>
-            <input type="text" id="update_tac_gia" name="tac_gia" placeholder="Tác Giả" required>
-            <input type="file" id="update_image" name="image" accept="image/*">
-            <button type="submit">Cập Nhật</button>
-            <button type="button" id="cancelUpdate">Hủy</button>
-        </form>
+            </div>
+        </div>
+        <button id="showFilePopup" onclick="openFilePopup()">File</button>
+
+       
     </div>
 
     <table id="mangasTable">
+        
         <thead>
             <tr>
-                <th>Tên Manga</th>
-                <th>Tác Giả</th>
-                <th>Ảnh Bìa</th>
-                <th  class="actions-column" style="display: none;" >Hành Động</th>
-                
+                <th style="width: 25%;">Tên Manga</th>
+                <th style="width: 25%;">Tác Giả</th>
+                <th style="width: 10%;">Ảnh Bìa</th>
+                <th class="actions-column" style="display: none;">Hành Động</th>
+
             </tr>
         </thead>
         <tbody>
             <!-- Dữ liệu sẽ được cập nhật bởi TablePagination -->
         </tbody>
     </table>
+    
 
     <div id="pagination">
         <button id="prevPage">Previous</button>
@@ -83,12 +74,49 @@ if (!isLogin()) {
     </div>
 </div>
 
+<div id="addMangaPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeAddMangaPopup()">&times;</span>
+            <h3>Thêm Manga Mới</h3>
+            <form id="addForm">
+                <input type="text" id="nam_m" name="nam_m" placeholder="Tên Manga" required>
+                <input type="text" id="tac_gia" name="tac_gia" placeholder="Tác Giả" required>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <button type="submit">Thêm Manga</button>
+                <button type="button" id="cancelAdd" onclick="closeAddMangaPopup()">Hủy</button>
+            </form>
+        </div>
+    </div>
+    <div id="mangaDetailPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Chi tiết Manga</h2>
+
+            <p><strong>Tên:</strong>
+                <span id="popupMangaName"></span>
+                <input type="text" id="editMangaName" style="display: none;">
+            </p>
+
+            <p><strong>Tác giả:</strong>
+                <span id="popupMangaAuthor"></span>
+                <input type="text" id="editMangaAuthor" style="display: none;">
+            </p>
+
+            <img id="popupMangaImage" src="" alt="Ảnh bìa" style="max-width: 200px;">
+            <input type="file" id="editMangaImage" style="display: none;">
+
+            <button id="updateMangaBtn" onclick="toggleEditMode()">Cập Nhật</button>
+            <button id="deleteMangaBtn">Xóa</button>
+        </div>
+    </div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    var _WEB_HOST = "<?php echo _WEB_HOST; ?>";
-    var module = '<?php echo $module; ?>';
+var _WEB_HOST = "<?php echo _WEB_HOST; ?>";
+var module = '<?php echo $module; ?>';
 
-    function fetchMangas() {
+function fetchMangas() {
     new TablePagination({
         url: _WEB_HOST + '/modules/' + module + '/get_manga.php',
         tableId: '#mangasTable',
@@ -96,106 +124,183 @@ if (!isLogin()) {
         currentPage: 1,
         buttonupdate: true,
         buttondelete: true,
-        columns: [
-            { key: 'nam_m' },
-            { key: 'tac_gia' },
-            { key: 'image' },
-            { key: 'actions', columnClass: 'actions-column', checkboxId: 'actionsColumn' }
-        ]
+        columns: [{
+                key: 'nam_m'
+            },
+            {
+                key: 'tac_gia'
+            },
+            {
+                key: 'image'
+            },
+            {
+                key: 'actions',
+                columnClass: 'actions-column',
+                checkboxId: 'actionsColumn'
+            }
+        ],
+        actionButtons: (item) => {
+            const readBtn = document.createElement('button');
+            readBtn.textContent = 'Add Chapter';
+            readBtn.classList.add('addchapter-btn');
+            readBtn.dataset.id = item.id;
+
+            readBtn.addEventListener('click', () => {
+                alert(`Đọc manga có ID: ${item.id}`);
+            });
+
+            return [readBtn];
+        }
     });
 }
 
+function showAlert(message) {
+    $("#alertBox").text(message).fadeIn();
+
+    // Ẩn thông báo sau 3 giây
+    setTimeout(() => {
+        $("#alertBox").fadeOut();
+    }, 3000);
+}
 // Gọi fetchMangas() khi trang tải xong
 document.addEventListener('DOMContentLoaded', fetchMangas);
 
+$(document).on('click', '.view-btn', function() {
+    const id = $(this).data('id');
+    const name = $(this).closest('tr').find('td:nth-child(1)').text().trim();
+    const author = $(this).closest('tr').find('td:nth-child(2)').text().trim();
+    const imageSrc = $(this).closest('tr').find('img').attr('src');
 
+    $('#popupMangaName').text(name);
+    $('#popupMangaAuthor').text(author);
+    $('#popupMangaImage').attr('src', imageSrc);
 
-
-
-    // Hiển thị Form Thêm
-    $("#showAddForm").click(() => {
-        $("#addMangaForm").show();
-    });
-    $("#cancelAdd").click(() => {
-        $("#addMangaForm").hide();
-    });
-    $("#cancelUpdate").click(() => {
-        $("#updateMangaForm").hide();
-    });
-
-    // Xử lý Thêm Manga
-    $("#addForm").submit(function (e) {
-        e.preventDefault();
-        let formData = new FormData(this);
-        $.ajax({
-            url: _WEB_HOST + '/modules/' + module + '/get_manga.php',
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                alert(response.message);
-                location.reload();
-            }
-        });
-    });
-
-    // Xử lý Cập Nhật Manga
-    $(document).on('click', '.update-btn', function () {
-        const id = $(this).data('id');
-    const name = $(this).data('name');
-    const author = $(this).data('author');
-    const image = $(this).data('image');
-
-    console.log("ID được lấy:", id); // Debug xem id có đúng không
-
-    if (!id) {
-        alert("Không tìm thấy ID, vui lòng thử lại!");
-        return;
-    }
-
-    // Hiển thị form cập nhật và điền dữ liệu
-    $("#updateMangaForm").show();
-    $("#update_id").val(id);
-    $("#update_nam_m").val(name);
-    $("#update_tac_gia").val(author);
-
-    // Nếu có ảnh, hiển thị ảnh hiện tại
-    if (image) {
-        $("#update_image_preview").attr("src", _WEB_HOST + "/uploads/" + image).show();
-    } else {
-        $("#update_image_preview").hide();
-    }
+    $('#mangaDetailPopup').data('id', id); // 🟢 Lưu ID vào popup
+    $('#mangaDetailPopup').show();
 });
-$("#updateForm").submit(function (e) {
-    e.preventDefault();
-    
-    let id = $("#update_id").val();
-    if (!id) {
-        alert("ID Manga không hợp lệ, vui lòng thử lại!");
+
+function openAddMangaPopup() {
+    document.getElementById("addMangaPopup").style.display = "block";
+}
+
+function closeAddMangaPopup() {
+    document.getElementById("addMangaPopup").style.display = "none";
+}
+function openFilePopup() {
+    document.getElementById("filePopup").style.display = "block";
+}
+function closePopupFile() {
+    document.getElementById("filePopup").style.display = "none";
+}
+function closePopup() {
+    $('#mangaDetailPopup').hide();
+}
+
+
+function toggleEditMode() {
+    let button = $('#updateMangaBtn');
+    let isEditing = button.text() === "Lưu";
+
+    if (isEditing) {
+        // Lưu dữ liệu
+        let updatedName = $('#editMangaName').val()?.trim();
+        let updatedAuthor = $('#editMangaAuthor').val()?.trim();
+        let updatedImage = $('#editMangaImage')[0]?.files[0];
+
+        console.log("Dữ liệu khi lưu:", {
+            updatedName,
+            updatedAuthor,
+            updatedImage
+        });
+
+        if (!updatedName || !updatedAuthor) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        // Hiển thị lại dữ liệu
+        $('#popupMangaName').text(updatedName).show();
+        $('#popupMangaAuthor').text(updatedAuthor).show();
+        $('#editMangaName').hide();
+        $('#editMangaAuthor').hide();
+        $('#editMangaImage').hide();
+        button.text("Cập Nhật");
+
+        updateManga(updatedImage);
+    } else {
+        // Chuyển sang chế độ chỉnh sửa
+        let currentName = $('#popupMangaName').text().trim();
+        let currentAuthor = $('#popupMangaAuthor').text().trim();
+
+        console.log("Chuyển sang chế độ chỉnh sửa:", {
+            currentName,
+            currentAuthor
+        });
+
+        if (!currentName || !currentAuthor) {
+            alert("Lỗi: Không tìm thấy dữ liệu!");
+            return;
+        }
+
+        $('#editMangaName').val(currentName).show();
+        $('#editMangaAuthor').val(currentAuthor).show();
+        $('#popupMangaName').hide();
+        $('#popupMangaAuthor').hide();
+        $('#editMangaImage').show();
+        button.text("Lưu");
+    }
+}
+
+function updateManga(imageFile) {
+    let id = $('#mangaDetailPopup').data('id');
+    let nameInput = $('#editMangaName').val()?.trim();
+    let authorInput = $('#editMangaAuthor').val()?.trim();
+
+    console.log("Dữ liệu gửi đi:", {
+        id,
+        nameInput,
+        authorInput,
+        imageFile
+    });
+
+    if (!id || !nameInput || !authorInput) {
+        alert("Dữ liệu không hợp lệ!");
         return;
     }
 
-    let formData = new FormData(this);
+    let formData = new FormData();
+    formData.append('id', id);
+    formData.append('nam_m', nameInput);
+    formData.append('tac_gia', authorInput);
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
+
     $.ajax({
         url: _WEB_HOST + '/modules/' + module + '/get_manga.php',
-        type: "POST", // Không phải PUT vì FormData không hỗ trợ PUT
+        type: "POST",
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
-            alert(response.message);
-            fetchMangas();
-            $("#updateMangaForm").hide();
+        success: function(response) {
+            console.log("Phản hồi từ server:", response);
+            if (response.success) {
+                alert("Cập nhật thành công!");
+                fetchMangas();
+                $('#mangaDetailPopup').hide();
+            } else {
+                alert(response.error || "Lỗi khi cập nhật!");
+            }
+        },
+        error: function() {
+            alert("Lỗi khi cập nhật manga!");
         }
     });
-});
+}
 
-    // Xóa Manga
-    $(document).on("click", ".delete-btn", function () {
-    let id = $(this).data("id");
-    console.log("ID được lấy:", id); // Kiểm tra ID
 
+$(document).on("click", ".delete-btn, #deleteMangaBtn", function() {
+    let id = $(this).data("id") || $(".view-btn").data("id");
     if (!id) {
         alert("ID không hợp lệ!");
         return;
@@ -203,56 +308,75 @@ $("#updateForm").submit(function (e) {
 
     if (confirm("Bạn có chắc chắn muốn xóa manga này?")) {
         $.ajax({
-    url: _WEB_HOST + "/modules/" + module + "/get_manga.php?id=" + id,
-    type: "DELETE",
-    success: function (response) {
-        console.log("Response từ server:", response); // In response để kiểm tra
+            url: _WEB_HOST + "/modules/" + module + "/get_manga.php?id=" + id,
+            type: "DELETE",
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message || "Xóa thành công!");
+                    fetchMangas();
+                    closePopup();
+                } else {
+                    alert(response.error || "Lỗi khi xóa manga!");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("Lỗi khi xóa manga! Kiểm tra console.");
+            }
+        });
+    }
+});
 
-        if (response.success) {
-            alert(response.message || "Xóa thành công!");
+
+
+
+
+
+// Xử lý Thêm Manga
+
+$("#addForm").submit(function(e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+    $.ajax({
+        url: _WEB_HOST + '/modules/' + module + '/get_manga.php',
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            console.log("Response từ server:", response);
+            alert(response.message);
             fetchMangas();
-        } else {
-            alert(response.error || "Lỗi khi xóa manga!");
+            closeAddMangaPopup();
         }
-    },
-    error: function (xhr, status, error) {
-        console.error("Lỗi AJAX:", status, error, "Response:", xhr.responseText);
-        alert("Lỗi khi xóa manga! Kiểm tra console.");
-    }
+    });
 });
 
-    }
-});
-
-
-
-
+// Xử lý Cập Nhật Manga
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Xử lý Import
-    document.getElementById('importForm').addEventListener('submit', function (e) {
+    document.getElementById('importForm').addEventListener('submit', function(e) {
         e.preventDefault();
         let formData = new FormData(this);
 
         fetch(_WEB_HOST + '/modules/' + module + '/import.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            location.reload(); // Load lại bảng sau khi import thành công
-        })
-        .catch(error => console.error('Lỗi:', error));
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload(); // Load lại bảng sau khi import thành công
+            })
+            .catch(error => console.error('Lỗi:', error));
     });
 
     // Xử lý Export
-    document.getElementById('exportBtn').addEventListener('click', function () {
+    document.getElementById('exportBtn').addEventListener('click', function() {
         window.location.href = _WEB_HOST + '/modules/' + module + '/export.php';
     });
 });
-
 </script>
 <?php
 Layouts('footer-admin', $title);
