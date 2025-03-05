@@ -2,6 +2,7 @@
 if(!defined('_CODE')){
     die('Access denied...');
 }
+
 ?>
 
 
@@ -128,6 +129,10 @@ if(!defined('_CODE')){
                         <a href="?module=manga&action=list_manga"> 
                             <i class="fixe"></i>
                             <span>Manga</span>
+                        </a>
+                        <a href="?module=category&action=list_category"> 
+                            <i class="fixe"></i>
+                            <span>Category</span>
                         </a>
                         </div>
                         

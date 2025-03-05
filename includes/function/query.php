@@ -75,6 +75,15 @@ function getRaw ($sql){
     }
     return $dataFetch;
 }
+function getRawparam($sql, $params = []) {
+    $result = query($sql, $params, true);
+    
+    if (is_object($result)) {
+        $dataFetch = $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    return $dataFetch;
+}
 
 // lấy 1 dòng dữ liệu
 function oneRaw ($sql){
@@ -83,6 +92,15 @@ function oneRaw ($sql){
         $dataFetch = $result->fetch((PDO::FETCH_ASSOC));
     }
     return $dataFetch;
+}
+function oneRawnew($sql, $params = []) {
+    $result = query($sql, $params, true); // Truy vấn với tham số
+
+    if ($result && is_object($result)) {
+        return $result->fetch(PDO::FETCH_ASSOC);
+    }
+
+    return null; // Trả về null nếu không có dữ liệu
 }
 
 function getRows ($sql){

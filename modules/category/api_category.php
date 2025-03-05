@@ -21,48 +21,50 @@ define('UPLOAD_DIR', '../../uploads/');
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
-    // Kiểm tra có ID không → Update
     $id = $_POST['id'] ?? null;
+    $name_category = trim($_POST['name_category'] ?? '');
+    $slug_category = trim($_POST['slug_category'] ?? '');
+    $status = $_POST['status'] ?? 1;
+    $note_category = trim($_POST['note_category'] ?? '');
 
-    $data = [
-        'nam_m'   => $_POST['nam_m'] ?? '',
-        'tac_gia' => $_POST['tac_gia'] ?? ''
-    ];
-
-    // Xử lý ảnh
-    if (!empty($_FILES['image']['name'])) {
-        $fileTmpPath = $_FILES['image']['tmp_name'];
-        $fileExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION); // Lấy phần mở rộng
-
-        // Tạo slug từ name
-        $nameSlug = !empty($_POST['nam_m']) ? slugify($_POST['nam_m']) : 'image';
-        
-        // Tạo tên file mới: slug-(random_number).ext
-        $newFileName = $nameSlug . '-' . rand(1000, 9999) . '.' . $fileExt;
-        $uploadFilePath = UPLOAD_DIR . $newFileName;
-
-        if (move_uploaded_file($fileTmpPath, $uploadFilePath)) {
-            $data['image'] = $newFileName; // Sửa thành 'image'
-        } else {
-            die(json_encode(['error' => 'Lỗi khi tải ảnh lên']));
-        }
+    // Kiểm tra dữ liệu đầu vào
+    if (empty($name_category) || empty($slug_category) || empty($note_category)) {
+        echo json_encode(['success' => false, 'error' => 'Vui lòng điền đầy đủ thông tin!']);
+        exit;
     }
 
+    // Đảm bảo status chỉ nhận giá trị hợp lệ (1 hoặc 0)
+    $status = ($status == 1) ? 1 : 0;
+
+    $data = [
+        'name_category' => $name_category,
+        'slug_category' => $slug_category,
+        'status' => $status,
+        'note_category' => $note_category
+    ];
 
     if ($id) {
-        // Nếu có ID thì cập nhật
+        // Cập nhật danh mục nếu có ID
         $condition = "id = " . intval($id);
-        $result = update('mange_tb', $data, $condition);
-        echo json_encode(['success' => $result ? true : false]);
+        $result = update('category', $data, $condition);
+        echo json_encode([
+            'success' => $result,
+            'message' => $result ? 'Cập nhật danh mục thành công!' : 'Cập nhật thất bại!'
+        ]);
     } else {
-        // Nếu không có ID thì thêm mới
-        if (empty($data['nam_m']) || empty($data['tac_gia'])) {
-            die(json_encode(['error' => 'Thiếu thông tin bắt buộc']));
+        // Kiểm tra xem slug có bị trùng không
+        $existingCategory = oneRawnew("SELECT id FROM category WHERE slug_category = ?", [$slug_category]);
+        if ($existingCategory) {
+            echo json_encode(['success' => false, 'error' => 'Slug đã tồn tại!']);
+            exit;
         }
-      
-        $result = insert('mange_tb', $data);
-        echo json_encode(['success' => $result ? true : false, 'message' => 'Thêm Manga thành công!']);
 
+        // Thêm danh mục mới
+        $result = insert('category', $data);
+        echo json_encode([
+            'success' => $result,
+            'message' => $result ? 'Thêm danh mục thành công!' : 'Thêm thất bại!'
+        ]);
     }
     exit;
 }
@@ -71,43 +73,41 @@ if ($method === 'POST') {
 if ($method === 'GET') {
     // Lấy tham số tìm kiếm
     $searchkey = isset($_GET['searchkey']) ? trim($_GET['searchkey']) : '';
-    // $key2 = isset($_GET['key2']) ? trim($_GET['key2']) : '';
-
     $page  = isset($_GET['page']) ? intval($_GET['page']) : 1;
-    $limit = 3;
+    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 5; // Nhận giá trị limit từ client
     $offset = ($page - 1) * $limit;
+    
+    // Lấy tham số sort và order
+    $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'id'; // Mặc định sort theo id
+    $order = isset($_GET['order']) ? trim($_GET['order']) : 'asc'; // Mặc định order là asc
 
     // Đếm tổng số bản ghi
-    $totalQuery = "SELECT COUNT(*) as total FROM mange_tb WHERE 1=1";
+    $totalQuery = "SELECT COUNT(*) as total FROM category WHERE 1=1";
     $totalParams = [];
 
     // Điều kiện tìm kiếm
     if (!empty($searchkey)) {
-        $totalQuery .= " AND (nam_m LIKE ? OR tac_gia LIKE ?)";
+        $totalQuery .= " AND (name_category LIKE ? OR slug_category LIKE ?)";
         $totalParams[] = "%$searchkey%";
         $totalParams[] = "%$searchkey%";
     }
-  
 
     $totalResult = getRawparam($totalQuery, $totalParams);
     $totalRecords = (!empty($totalResult) && isset($totalResult[0]['total'])) ? $totalResult[0]['total'] : 0;
     $totalPages = ($totalRecords > 0) ? ceil($totalRecords / $limit) : 1;
 
     // Truy vấn lấy danh sách
-    $sql = "SELECT id, nam_m, tac_gia, image FROM mange_tb WHERE 1=1";
+    $sql = "SELECT id, name_category, slug_category, note_category, status FROM category WHERE 1=1";
     $params = [];
 
     if (!empty($searchkey)) {
-        $sql .= " AND (nam_m LIKE ? OR tac_gia LIKE ?)";
+        $sql .= " AND (name_category LIKE ? OR slug_category LIKE ?)";
         $params[] = "%$searchkey%";
         $params[] = "%$searchkey%";
     }
-    // if (!empty($key2)) {
-    //     $sql .= " AND (category LIKE ? OR publisher LIKE ?)";
-    //     $params[] = "%$key2%";
-    //     $params[] = "%$key2%";
-    // }
 
+    // Thêm điều kiện sắp xếp
+    $sql .= " ORDER BY $sort $order";
     $sql .= " LIMIT $limit OFFSET $offset";
 
     $result = getRawparam($sql, $params);
@@ -138,7 +138,7 @@ if ($method === 'DELETE') {
     error_log("DELETE Request với ID: " . $id);
 
     // Kiểm tra manga có tồn tại không
-    $checkQuery = "SELECT image FROM mange_tb WHERE id = $id";
+    $checkQuery = "SELECT name_category FROM category WHERE id = $id";
     $result = getRaw($checkQuery);
 
     if (!$result || count($result) === 0) {
@@ -146,18 +146,12 @@ if ($method === 'DELETE') {
         exit;
     }
 
-    // Xóa ảnh nếu có
-    $image = $result[0]['image'] ?? '';
-    if (!empty($image) && file_exists(UPLOAD_DIR . $image)) {
-        unlink(UPLOAD_DIR . $image);
-    }
-
     // Xóa dữ liệu
     $condition = "id = $id";
-    $deleteResult = delete('mange_tb', $condition);
+    $deleteResult = delete('category', $condition);
 
     if ($deleteResult) {
-        echo json_encode(['success' => true, 'message' => 'Xóa manga thành công']);
+        echo json_encode(['success' => true, 'message' => 'Xóa the loai thành công']);
     } else {
         echo json_encode(['success' => false, 'error' => 'Lỗi khi xóa manga']);
     }

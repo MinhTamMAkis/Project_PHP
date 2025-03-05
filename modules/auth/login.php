@@ -22,7 +22,7 @@ if(isPost()){
         $password = $filterAll['password']; 
     
         // Truy vấn thông tin user theo mail
-        $QueryUser = oneRaw("SELECT password ,id FROM users WHERE email = '$email'");
+        $QueryUser = oneRawnew("SELECT password ,id FROM users WHERE email = ?", [$email]);
         if(!empty($QueryUser)){
             $passwordHash = $QueryUser['password'];
             $userId= $QueryUser['id'];

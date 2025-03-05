@@ -67,53 +67,53 @@ function filter(){
 }
 
 //mail
-function sendMail($to ,$subject, $content){
+// function sendMail($to ,$subject, $content){
 
-$mail = new PHPMailer(true);
+// $mail = new PHPMailer(true);
 
-try {
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'nmt15801pgram@gmail.com';                     //SMTP username
-    $mail->Password   = 'zxbwtmpraxbiojcr';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+// try {
+//     //Server settings
+//     $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
+//     $mail->isSMTP();                                            //Send using SMTP
+//     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+//     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+//     $mail->Username   = 'nmt15801pgram@gmail.com';                     //SMTP username
+//     $mail->Password   = 'zxbwtmpraxbiojcr';                               //SMTP password
+//     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+//     $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-    //Recipients
-    $mail->setFrom('nmt15801pgram@gmail.com', 'Mailer');
-    $mail->addAddress($to);     //Add a recipient
-    //Content
-    $mail->CharSet = "UTF-8";
-    $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = $subject;
-    $mail->Body    = $content;
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-
-
-    //PHPMailer SSL certificare verify failed
-    $mail->SMTPOptions = array(
-        'ssl' => array(
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-            'allow_self_signed' => true
-        )
-    );
+//     //Recipients
+//     $mail->setFrom('nmt15801pgram@gmail.com', 'Mailer');
+//     $mail->addAddress($to);     //Add a recipient
+//     //Content
+//     $mail->CharSet = "UTF-8";
+//     $mail->isHTML(true);                                  //Set email format to HTML
+//     $mail->Subject = $subject;
+//     $mail->Body    = $content;
+//     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 
 
-    $sendmail = $mail->send();
-    if($sendmail){
-        return $sendmail;
-    }
-    //echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
-}
+//     //PHPMailer SSL certificare verify failed
+//     $mail->SMTPOptions = array(
+//         'ssl' => array(
+//             'verify_peer' => false,
+//             'verify_peer_name' => false,
+//             'allow_self_signed' => true
+//         )
+//     );
+
+
+
+//     $sendmail = $mail->send();
+//     if($sendmail){
+//         return $sendmail;
+//     }
+//     //echo 'Message has been sent';
+// } catch (Exception $e) {
+//     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+// }
+// }
 
 
 //Kiểm tra email 
@@ -170,6 +170,31 @@ function slugify($string) {
     // Xóa dấu '-' ở đầu và cuối
     return trim($string, '-');
 }
+
+function getBearerToken() {
+    $headers = getallheaders();
+    if (!isset($headers['Authorization'])) {
+        return null;
+    }
+
+    $authorizationHeader = $headers['Authorization'];
+
+    if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
+        return $matches[1]; // Lấy token từ chuỗi "Bearer <token>"
+    }
+
+    return null;
+}
+
+function createResponse($code, $status, $data = [], $lineError = null) {
+    return [
+        'Code' => $code,
+        'Line Error' => $lineError,
+        'Status' => $status,
+        'Data' => $data
+    ];
+}
+
 
 function isLogin(){
     $checkLogin = false;
